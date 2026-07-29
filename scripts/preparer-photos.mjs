@@ -57,7 +57,7 @@ const PHOTOS = [
      * est la seule valeur contrainte par le contraste ; élargir vers le haut
      * rend la texture visible et ne coûte rien.
      */
-    fond: { flou: 9, plage: [0.141, 219], opacite: 0.42 },
+    fond: { flou: 7, plage: [0.357, 162], opacite: 0.6 },
   },
   {
     nom: 'pages-ouvertes',
@@ -187,7 +187,8 @@ for (const photo of PHOTOS) {
     const c = await controlerContraste(fichier, photo.fond.opacite, PAPIER)
     console.log(
       `  contraste à ${photo.fond.opacite} d'opacité — luminance ${c.min} à ${c.max} · ` +
-        `encre ${c.encre}:1 · muted ${c.muted}:1 · vert ${c.accent}:1 · brique ${c.accent2}:1`,
+        `encre ${c.encre}:1 · muted du fond ${c.mutedFond}:1 · muted global ${c.muted}:1 · ` +
+        `vert ${c.accent}:1 · brique ${c.accent2}:1`,
     )
   }
 }
@@ -237,6 +238,8 @@ async function controlerContraste(fichier, opacite, papier) {
     max: max.toFixed(3),
     encre: ratio([27, 26, 23]),
     muted: ratio([107, 101, 89]),
+    // Gris secondaire repris d'un cran, celui qui s'applique sur le fond.
+    mutedFond: ratio([78, 74, 65]),
     accent: ratio([63, 93, 69]),
     accent2: ratio([164, 68, 47]),
   }

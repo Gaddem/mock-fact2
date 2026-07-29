@@ -21,7 +21,7 @@ export default function Accueil() {
           Le mur de pages passe en fond. C'est la seule photo du site sous du
           texte : elle porte la variante dédiée, floutée et écrasée dans le
           fichier, à l'opacité mesurée. */}
-      <section className="relative isolate overflow-hidden">
+      <section className="sur-fond relative isolate overflow-hidden">
         <Photo source={murDePages} alt="" sizes="100vw" variante="fond" priorite />
 
         <div className="relative mx-auto grid max-w-[var(--contenu-max)] gap-12 px-5 pt-14 pb-[var(--section-y)] sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">

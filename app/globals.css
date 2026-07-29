@@ -623,9 +623,19 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    opacity: 0.42;
+    opacity: 0.6;
     pointer-events: none;
     mask-image: linear-gradient(to bottom, #000 52%, transparent);
+  }
+
+  /* Le gris secondaire est repris d'un cran sur la zone qui porte la photo.
+     C'est lui, et lui seul, qui plafonnait la présence de l'image : à 12 px,
+     `--muted` obligeait à délaver le fond jusqu'à ne plus rien voir. Un gris
+     un peu plus dense garde la hiérarchie, laisse l'image exister, et tient
+     largement AA sur le pixel le plus sombre. Le token global, lui, ne bouge
+     pas : partout ailleurs le texte est posé sur du papier nu. */
+  .sur-fond {
+    --muted: #4e4a41;
   }
 
   /* -------------------------------------------------------------

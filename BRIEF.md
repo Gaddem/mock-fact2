@@ -131,7 +131,14 @@ L'ouverture de l'accueil en porte une — un mur de pages ouvertes. La règle sa
 remplacée par de l'à-peu-près : la photo a sa variante dédiée, le flou et l'écrasement de sa
 dynamique sont cuits dans le fichier, et son opacité d'affichage n'est pas choisie à l'œil —
 `scripts/preparer-photos.mjs` mesure le contraste pixel par pixel à cette opacité exacte, et la
-mesure est refaite sur la page rendue, grain compris.
+mesure est refaite sur la page rendue, grain compris, à 1440 px comme à 375 px.
+
+**Ce qui plafonnait la photo, c'était le gris secondaire à 12 px** — pas la photo. Tant que
+`--muted` s'appliquait sur le fond, il fallait délaver l'image jusqu'à ne plus rien voir pour
+tenir AA. Le token est donc repris d'un cran **sur cette zone seulement** (`.sur-fond`,
+`--muted: #4E4A41`) : la hiérarchie tient, l'image existe, et le pire pixel donne **5,82:1** au
+lieu de 4,52:1. Partout ailleurs le token global ne bouge pas — le texte y est posé sur du
+papier nu.
 
 ## Pages
 
@@ -195,7 +202,7 @@ texte.
 | Matrice 320/375/414/768/834/1024/1280/1536 × 5 pages  | zéro défilement horizontal, zéro débordement, zéro rognage                       |
 | Cibles tactiles                                       | toutes ≥ 44 px de haut                                                           |
 | Contrastes (couleurs calculées)                       | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**               |
-| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; le plus faible à **4,74:1** (texte secondaire, 12 px)                  |
+| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; **5,82:1** au pire sur le hero, **4,74:1** au pire ailleurs            |
 | Entrées en scène                                      | 35 blocs sur l'accueil, 20 sur l'article : tous visibles en fin de défilement    |
 | `prefers-reduced-motion`                              | `data-pile` non posé, aucun `translate`/`rotate`, les 35 blocs visibles d'emblée |
 | Lighthouse mobile (build de production servi en gzip) | perf **91–94** · accessibilité **100** · bonnes pratiques **100** · SEO **54**   |
