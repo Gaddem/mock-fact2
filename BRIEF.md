@@ -102,7 +102,6 @@ l'épaisseur d'un objet, entrée par la marge pour ce qui vit dans la marge :
   photos et les rangées de l'agenda.
 - `filet-exergue` — le filet de la citation se tire de haut en bas à l'arrivée du bloc.
 - `index-deroule` — l'index alphabétique se déroule entrée par entrée à l'arrivée sur la page.
-
 - `index-lettre-active` — la lettre de l'index latéral correspondant à la section lue s'encre en vert.
 - `lettrine-posee` — la lettrine des articles s'aligne sur la grille de ligne de base à l'entrée.
 - `notes-marginales` — les notes de marge se révèlent au niveau de leur paragraphe (≥1280px ;
