@@ -1,5 +1,7 @@
 # Le Cinquième Rayon
 
+**https://gaddem.github.io/mock-fact2/**
+
 Site vitrine de démonstration pour une librairie indépendante inventée. Next.js en export
 statique, publié sur GitHub Pages.
 
