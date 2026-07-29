@@ -623,7 +623,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    opacity: 0.6;
+    opacity: 0.8;
     pointer-events: none;
     mask-image: linear-gradient(to bottom, #000 52%, transparent);
   }
@@ -635,7 +635,7 @@
      largement AA sur le pixel le plus sombre. Le token global, lui, ne bouge
      pas : partout ailleurs le texte est posé sur du papier nu. */
   .sur-fond {
-    --muted: #4e4a41;
+    --muted: #3a362f;
   }
 
   /* -------------------------------------------------------------

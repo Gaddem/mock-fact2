@@ -28,4 +28,4 @@ dans une langue qui contredisait le récit.
 
 `mur-de-pages.jpg` est la seule photo qui passe derrière du texte. Son flou et l'écrasement
 de sa dynamique sont cuits dans le fichier, et son opacité d'affichage est vérifiée pixel par
-pixel par ce même script : le texte secondaire tient 4.20:1 sur le pire pixel.
+pixel par ce même script : le texte secondaire tient 3.93:1 sur le pire pixel.

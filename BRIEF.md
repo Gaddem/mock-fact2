@@ -135,10 +135,14 @@ mesure est refaite sur la page rendue, grain compris, à 1440 px comme à 375 px
 
 **Ce qui plafonnait la photo, c'était le gris secondaire à 12 px** — pas la photo. Tant que
 `--muted` s'appliquait sur le fond, il fallait délaver l'image jusqu'à ne plus rien voir pour
-tenir AA. Le token est donc repris d'un cran **sur cette zone seulement** (`.sur-fond`,
-`--muted: #4E4A41`) : la hiérarchie tient, l'image existe, et le pire pixel donne **5,82:1** au
-lieu de 4,52:1. Partout ailleurs le token global ne bouge pas — le texte y est posé sur du
-papier nu.
+tenir AA. Le token est donc densifié **sur cette zone seulement** (`.sur-fond`,
+`--muted: #3A362F`) : la hiérarchie tient — c'est toujours un gris, pas de l'encre — et le
+budget de contraste se libère d'un coup. Partout ailleurs le token global ne bouge pas, le
+texte y est posé sur du papier nu.
+
+Résultat contre-intuitif : la photo est passée de délavée à franchement présente (plancher 219
+→ 140, opacité 0,42 → 0,8) **et** le pire pixel est monté de 4,52:1 à **6,48:1**. Le mauvais
+bouton, c'était l'image ; le bon, c'était la couleur du texte.
 
 ## Pages
 
@@ -202,7 +206,7 @@ texte.
 | Matrice 320/375/414/768/834/1024/1280/1536 × 5 pages  | zéro défilement horizontal, zéro débordement, zéro rognage                       |
 | Cibles tactiles                                       | toutes ≥ 44 px de haut                                                           |
 | Contrastes (couleurs calculées)                       | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**               |
-| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; **5,82:1** au pire sur le hero, **4,74:1** au pire ailleurs            |
+| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; **6,48:1** au pire sur le hero (6,25:1 à 375 px), **4,74:1** ailleurs  |
 | Entrées en scène                                      | 35 blocs sur l'accueil, 20 sur l'article : tous visibles en fin de défilement    |
 | `prefers-reduced-motion`                              | `data-pile` non posé, aucun `translate`/`rotate`, les 35 blocs visibles d'emblée |
 | Lighthouse mobile (build de production servi en gzip) | perf **91–94** · accessibilité **100** · bonnes pratiques **100** · SEO **54**   |

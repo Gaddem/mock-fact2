@@ -57,7 +57,7 @@ const PHOTOS = [
      * est la seule valeur contrainte par le contraste ; élargir vers le haut
      * rend la texture visible et ne coûte rien.
      */
-    fond: { flou: 7, plage: [0.357, 162], opacite: 0.6 },
+    fond: { flou: 6, plage: [0.45, 140], opacite: 0.8 },
   },
   {
     nom: 'pages-ouvertes',
@@ -238,8 +238,8 @@ async function controlerContraste(fichier, opacite, papier) {
     max: max.toFixed(3),
     encre: ratio([27, 26, 23]),
     muted: ratio([107, 101, 89]),
-    // Gris secondaire repris d'un cran, celui qui s'applique sur le fond.
-    mutedFond: ratio([78, 74, 65]),
+    // Gris secondaire densifié, celui qui s'applique sur le fond.
+    mutedFond: ratio([58, 54, 47]),
     accent: ratio([63, 93, 69]),
     accent2: ratio([164, 68, 47]),
   }
