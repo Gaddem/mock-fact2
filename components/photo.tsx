@@ -6,7 +6,7 @@ type Props = {
   alt: string
   sizes: string
   className?: string
-  variante?: 'fondu' | 'fondu-lateral'
+  variante?: 'fondu' | 'fondu-lateral' | 'fond'
   priorite?: boolean
 }
 

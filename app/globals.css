@@ -93,12 +93,16 @@
      Texture — grain de papier, tuilé une fois, jamais animé
      ------------------------------------------------------------- */
 
+  /* Opacité mesurée, pas choisie à l'œil : à 0,42 le bruit faisait tomber
+     le texte secondaire à 4,52:1 sur toutes les pages — au-dessus d'AA,
+     mais sans marge. Le grain se juge sur des pixels rendus, jamais sur la
+     couleur calculée du fond, qui l'ignore. */
   .grain {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    opacity: 0.42;
+    opacity: 0.28;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
     background-size: 160px 160px;
   }
@@ -608,6 +612,20 @@
 
   .photo--fondu-lateral {
     mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+
+  /* Seule variante qui passe derrière du texte. Le flou et l'écrasement de
+     la dynamique sont cuits dans le JPEG ; il ne reste ici que l'opacité,
+     et sa valeur n'est pas choisie à l'œil : `scripts/preparer-photos.mjs`
+     mesure le contraste pixel par pixel à cette opacité exacte et refuse de
+     passer sous AA. Changer l'une sans relancer l'autre casse la garantie. */
+  .photo--fond {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.42;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, #000 52%, transparent);
   }
 
   /* -------------------------------------------------------------

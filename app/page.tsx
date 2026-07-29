@@ -3,6 +3,7 @@ import { Photo } from '@/components/photo'
 import { PileCouvertures } from '@/components/pile-couvertures'
 import { Reveal } from '@/components/reveal'
 import { selection, tousLesRayons } from '@/lib/livres'
+import murDePages from '@/public/images/mur-de-pages.jpg'
 import pagesOuvertes from '@/public/images/pages-ouvertes.jpg'
 
 export default function Accueil() {
@@ -15,9 +16,15 @@ export default function Accueil() {
     <>
       {/* Ouverture : pas de hero pleine hauteur, pas de titre centré, pas de
           bouton coloré. Une colonne éditoriale calée à gauche, et l'ardoise
-          de la maison en regard. */}
-      <section className="mx-auto max-w-[var(--contenu-max)] px-5 pt-14 pb-[var(--section-y)] sm:px-8 sm:pt-20">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
+          de la maison en regard.
+
+          Le mur de pages passe en fond. C'est la seule photo du site sous du
+          texte : elle porte la variante dédiée, floutée et écrasée dans le
+          fichier, à l'opacité mesurée. */}
+      <section className="relative isolate overflow-hidden">
+        <Photo source={murDePages} alt="" sizes="100vw" variante="fond" priorite />
+
+        <div className="relative mx-auto grid max-w-[var(--contenu-max)] gap-12 px-5 pt-14 pb-[var(--section-y)] sm:px-8 sm:pt-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
           <div>
             <Reveal cascade rang={0}>
               <p className="surtitre">Librairie indépendante · depuis 1998</p>

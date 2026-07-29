@@ -34,6 +34,32 @@ const PAPIER = '#F7F3E9'
  */
 const PHOTOS = [
   {
+    nom: 'mur-de-pages',
+    source:
+      'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1920&auto=format&fit=crop',
+    page: 'https://unsplash.com/photos/52c61a468e7d',
+    largeur: 1920,
+    hauteur: 1100,
+    qualite: 62,
+    usage: 'accueil — fond de l’ouverture',
+    /**
+     * Seule photo du site qui passe derrière du texte, donc seule à porter
+     * ce traitement — réglé ici, dans le fichier, et pas au cas par cas
+     * dans les pages : une page finirait par l'oublier.
+     *
+     * Le flou est cuit dans le JPEG. En `filter: blur()` CSS, une image de
+     * 1920 px se re-rastérise à chaque frame dès que quoi que ce soit bouge
+     * au-dessus. Cuit, il rend aussi l'image très compressible.
+     *
+     * `linear` remonte le plancher sans toucher au plafond : ce qui compte
+     * ici n'est pas le pixel le plus clair mais le plus SOMBRE, puisque tout
+     * le texte posé dessus est de l'encre sur du papier. Le plancher (219)
+     * est la seule valeur contrainte par le contraste ; élargir vers le haut
+     * rend la texture visible et ne coûte rien.
+     */
+    fond: { flou: 9, plage: [0.141, 219], opacite: 0.42 },
+  },
+  {
     nom: 'pages-ouvertes',
     source: 'https://images.pexels.com/photos/46275/pexels-photo-46275.jpeg',
     page: 'https://www.pexels.com/photo/books-table-blurred-book-46275/',
@@ -116,13 +142,13 @@ for (const photo of PHOTOS) {
   // Le duplex demande DEUX passes : dans une seule, `greyscale` s'applique
   // après `tint` (l'ordre est interne, pas celui des appels) et efface la
   // teinte — on obtient un gris parfaitement neutre.
-  const gris = await image
+  const etape = image
     .resize(photo.largeur, photo.hauteur, { fit: 'cover', position: 'attention' })
-    .modulate({ brightness: photo.brillance })
-    .greyscale()
-    .toColourspace('srgb')
-    .png()
-    .toBuffer()
+    .modulate({ brightness: photo.brillance ?? 1 })
+
+  if (photo.fond) etape.blur(photo.fond.flou)
+
+  const gris = await etape.greyscale().toColourspace('srgb').png().toBuffer()
 
   // Voile de papier : les photos doivent sembler imprimées sur la même
   // feuille que le texte, pas collées par-dessus.
@@ -139,17 +165,81 @@ for (const photo of PHOTOS) {
 
   const fichier = chemin(`../public/images/${photo.nom}.jpg`)
 
-  await sharp(gris)
+  const finale = sharp(gris)
     .tint(TEINTE)
     .composite([{ input: couchePapier, blend: 'over' }])
-    .jpeg({ quality: photo.qualite, progressive: true, mozjpeg: true })
-    .toFile(fichier)
+  if (photo.fond) finale.linear(photo.fond.plage[0], photo.fond.plage[1])
+
+  await finale.jpeg({ quality: photo.qualite, progressive: true, mozjpeg: true }).toFile(fichier)
 
   // Contrôle de la teinte : trois moyennes de canaux identiques voudraient
   // dire que la passe de couleur a été effacée.
   const stats = await sharp(fichier).stats()
   const moyennes = stats.channels.map((canal) => canal.mean.toFixed(1)).join(' / ')
-  console.log(`${photo.nom}.jpg — ${photo.largeur}×${photo.hauteur} — RVB moyens ${moyennes}`)
+  const extremes = photo.fond
+    ? ` — min/max ${Math.min(...stats.channels.map((c) => c.min))}/${Math.max(...stats.channels.map((c) => c.max))}`
+    : ''
+  console.log(
+    `${photo.nom}.jpg — ${photo.largeur}×${photo.hauteur} — RVB moyens ${moyennes}${extremes}`,
+  )
+
+  if (photo.fond) {
+    const c = await controlerContraste(fichier, photo.fond.opacite, PAPIER)
+    console.log(
+      `  contraste à ${photo.fond.opacite} d'opacité — luminance ${c.min} à ${c.max} · ` +
+        `encre ${c.encre}:1 · muted ${c.muted}:1 · vert ${c.accent}:1 · brique ${c.accent2}:1`,
+    )
+  }
+}
+
+/**
+ * Contraste d'une photo de fond, mesuré sur les pixels et pas sur la moyenne.
+ *
+ * La règle habituelle dit « le pixel le plus clair » : elle vient d'un site
+ * sombre à texte clair. Ici c'est l'inverse — de l'encre sur du papier — donc
+ * c'est le pixel le plus SOMBRE qui décide. On calcule les deux et on garde
+ * le pire cas pour chaque couleur de texte.
+ *
+ * La chaîne reproduite est celle du navigateur : image, puis opacité du
+ * conteneur par-dessus le papier de la page.
+ */
+async function controlerContraste(fichier, opacite, papier) {
+  const { data, info } = await sharp(fichier).raw().toBuffer({ resolveWithObject: true })
+  const fond = hexVersRgb(papier)
+
+  const canal = (v) => {
+    const x = v / 255
+    return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4
+  }
+  const luminance = (r, v, b) => 0.2126 * canal(r) + 0.7152 * canal(v) + 0.0722 * canal(b)
+  const melange = (photo, papier) => opacite * photo + (1 - opacite) * papier
+
+  let min = 1
+  let max = 0
+  for (let i = 0; i < data.length; i += info.channels) {
+    const l = luminance(
+      melange(data[i], fond.r),
+      melange(data[i + 1], fond.g),
+      melange(data[i + 2], fond.b),
+    )
+    if (l < min) min = l
+    if (l > max) max = l
+  }
+
+  const ratio = (couleur) => {
+    const l = luminance(...couleur)
+    const pire = Math.min((min + 0.05) / (l + 0.05), (max + 0.05) / (l + 0.05))
+    return pire.toFixed(2)
+  }
+
+  return {
+    min: min.toFixed(3),
+    max: max.toFixed(3),
+    encre: ratio([27, 26, 23]),
+    muted: ratio([107, 101, 89]),
+    accent: ratio([63, 93, 69]),
+    accent2: ratio([164, 68, 47]),
+  }
 }
 
 function hexVersRgb(hex) {
@@ -162,8 +252,8 @@ function hexVersRgb(hex) {
 
 const credits = `# Crédits photo
 
-Toutes les photos viennent de **Pexels** (licence Pexels : usage libre, y compris commercial,
-sans attribution obligatoire). Elles sont recadrées et ré-encodées par
+Les photos viennent de **Pexels** et d'**Unsplash** (licences Pexels et Unsplash : usage libre,
+y compris commercial, sans attribution obligatoire). Elles sont recadrées et ré-encodées par
 \`scripts/preparer-photos.mjs\`.
 
 ${PHOTOS.map((p) => `- \`${p.nom}.jpg\` — ${p.page}\n  ${p.usage}`).join('\n')}
@@ -176,6 +266,10 @@ lisible. Sept candidates ont été écartées après examen : deux librairies re
 leur aménagement, une devanture portant le nom d'un commerce parisien, un portrait affiché au
 mur, deux cadrages où les titres exposés se lisaient sans effort, et une étiquette de rayon
 dans une langue qui contredisait le récit.
+
+\`mur-de-pages.jpg\` est la seule photo qui passe derrière du texte. Son flou et l'écrasement
+de sa dynamique sont cuits dans le fichier, et son opacité d'affichage est vérifiée pixel par
+pixel par ce même script : le texte secondaire tient ${(await controlerContraste(chemin('../public/images/mur-de-pages.jpg'), 0.42, PAPIER)).muted}:1 sur le pire pixel.
 `
 
 await writeFile(chemin('../public/images/CREDITS.md'), credits, 'utf8')

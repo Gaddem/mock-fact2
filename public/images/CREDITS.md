@@ -1,9 +1,11 @@
 # Crédits photo
 
-Toutes les photos viennent de **Pexels** (licence Pexels : usage libre, y compris commercial,
-sans attribution obligatoire). Elles sont recadrées et ré-encodées par
+Les photos viennent de **Pexels** et d'**Unsplash** (licences Pexels et Unsplash : usage libre,
+y compris commercial, sans attribution obligatoire). Elles sont recadrées et ré-encodées par
 `scripts/preparer-photos.mjs`.
 
+- `mur-de-pages.jpg` — https://unsplash.com/photos/52c61a468e7d
+  accueil — fond de l’ouverture
 - `pages-ouvertes.jpg` — https://www.pexels.com/photo/books-table-blurred-book-46275/
   accueil — bande après la chronique
 - `livre-ouvert.jpg` — https://www.pexels.com/photo/pages-on-an-opened-book-415071/
@@ -23,3 +25,7 @@ lisible. Sept candidates ont été écartées après examen : deux librairies re
 leur aménagement, une devanture portant le nom d'un commerce parisien, un portrait affiché au
 mur, deux cadrages où les titres exposés se lisaient sans effort, et une étiquette de rayon
 dans une langue qui contredisait le récit.
+
+`mur-de-pages.jpg` est la seule photo qui passe derrière du texte. Son flou et l'écrasement
+de sa dynamique sont cuits dans le fichier, et son opacité d'affichage est vérifiée pixel par
+pixel par ce même script : le texte secondaire tient 4.95:1 sur le pire pixel.

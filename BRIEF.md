@@ -124,8 +124,14 @@ Primitives libres réutilisées sans état d'âme : fondu-montant, stagger-grill
    colonne éditoriale, décalé à gauche, avec la pile de couvertures en regard. Pas de bouton
    « Découvrir » : les liens sont des liens, soulignés.
 
-À quoi s'ajoutent deux interdits de forme : **pas de photo derrière un titre** (les photos sont des
-respirations, jamais des fonds de texte), et **pas de bandeau défilant** — déjà consommé au projet 1.
+À quoi s'ajoute un interdit de forme : **pas de bandeau défilant** — déjà consommé au projet 1.
+
+**Exception assumée à l'anti-brief.** Le brief initial interdisait toute photo derrière du texte.
+L'ouverture de l'accueil en porte une — un mur de pages ouvertes. La règle sautée n'est pas
+remplacée par de l'à-peu-près : la photo a sa variante dédiée, le flou et l'écrasement de sa
+dynamique sont cuits dans le fichier, et son opacité d'affichage n'est pas choisie à l'œil —
+`scripts/preparer-photos.mjs` mesure le contraste pixel par pixel à cette opacité exacte, et la
+mesure est refaite sur la page rendue, grain compris.
 
 ## Pages
 
@@ -142,8 +148,10 @@ Contenus 100 % inventés : titres, auteurs, éditeurs, dates. Aucun ouvrage rée
 
 ## Photos
 
-Cinq emplacements, cinq photos distinctes, aucune répétition :
+Six emplacements, six photos distinctes, aucune répétition :
 
+0. `/` — **fond de l'ouverture** (mur de pages ouvertes, Unsplash) — la seule qui passe
+   derrière du texte, avec la variante `fond` dédiée
 1. `/` — bande après la chronique (tranche et pages en éventail)
 2. `/catalogue` — bandeau de tête (livre ouvert, pages en éventail sur mur clair)
 3. `/la-maison` — respiration au milieu de l'article (étagère haute : bocaux, poteries, bois)
@@ -162,8 +170,10 @@ deux passes `sharp`, puis voile de papier à 16 % pour que la photo semble impri
 feuille que le texte), bords dissous par `mask-image`. Script de préparation committé,
 `CREDITS.md` généré. Toutes sous 110 Ko, JPEG progressif.
 
-Aucune photo ne porte de texte : la mesure de contraste sur le pixel le plus clair est donc sans
-objet ici.
+**La règle du « pixel le plus clair » ne s'applique pas telle quelle ici.** Elle vient d'un site
+sombre à texte clair. Ce site-ci, c'est de l'encre sur du papier : le pixel qui décide est le plus
+**sombre**. Le script calcule les deux et garde le pire cas pour chacune des quatre couleurs de
+texte.
 
 ## Technique
 
@@ -184,7 +194,8 @@ objet ici.
 | `npm run build`                                       | `out/` généré, 5 pages                                                           |
 | Matrice 320/375/414/768/834/1024/1280/1536 × 5 pages  | zéro défilement horizontal, zéro débordement, zéro rognage                       |
 | Cibles tactiles                                       | toutes ≥ 44 px de haut                                                           |
-| Contrastes                                            | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**               |
+| Contrastes (couleurs calculées)                       | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**               |
+| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; le plus faible à **4,74:1** (texte secondaire, 12 px)                  |
 | Entrées en scène                                      | 35 blocs sur l'accueil, 20 sur l'article : tous visibles en fin de défilement    |
 | `prefers-reduced-motion`                              | `data-pile` non posé, aucun `translate`/`rotate`, les 35 blocs visibles d'emblée |
 | Lighthouse mobile (build de production servi en gzip) | perf **91–94** · accessibilité **100** · bonnes pratiques **100** · SEO **54**   |
@@ -194,7 +205,13 @@ objet ici.
 dépôt Pages n'est de toute façon jamais servi à la racine du domaine, seul endroit où un robot le
 cherche ; le `noindex` fait le travail.
 
-**Deux pièges rencontrés, qui valaient d'être notés :**
+**Trois pièges rencontrés, qui valaient d'être notés :**
+
+- Le contraste calculé sur les couleurs des tokens ignore ce qui est peint **par-dessus**. Le
+  grain de papier, à 0,42 d'opacité, faisait tomber le texte secondaire de 5,22:1 à **4,52:1** sur
+  toutes les pages — au-dessus d'AA, mais sans marge, et le calcul par couleurs ne le voyait pas.
+  Trouvé en mesurant les pixels rendus d'une page **sans** photo de fond, en cherchant le coût de
+  la photo : la photo ne coûtait rien, le grain coûtait tout. Ramené à 0,28.
 
 - Une piste de grille prend la largeur intrinsèque de son contenu. Sans `min-w-0` sur les
   cellules, l'index latéral élargissait la colonne bien au-delà du viewport — invisible, parce que
