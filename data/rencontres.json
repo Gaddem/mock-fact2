@@ -1,0 +1,52 @@
+[
+  {
+    "id": "marquant-halle",
+    "date": "2026-09-11",
+    "heure": "19h00",
+    "titre": "Adèle Marquant — La Halle aux vents",
+    "type": "Rencontre",
+    "places": 40,
+    "restantes": 6,
+    "resume": "Premier roman, trois hivers dans une halle désaffectée. La rencontre commence par une lecture de quinze minutes, puis on parle."
+  },
+  {
+    "id": "atelier-reliure",
+    "date": "2026-09-27",
+    "heure": "14h30",
+    "titre": "Atelier reliure — recoudre un livre abîmé",
+    "type": "Atelier",
+    "places": 12,
+    "restantes": 0,
+    "resume": "Apportez un livre décousu. Trois heures, tout le matériel est fourni, on ressort avec l'ouvrage réparé."
+  },
+  {
+    "id": "esteve-lecture",
+    "date": "2026-10-09",
+    "heure": "19h30",
+    "titre": "Paul Estève lit Avant le nom des choses",
+    "type": "Lecture",
+    "places": 35,
+    "restantes": 18,
+    "resume": "Lecture intégrale du recueil, sans entracte. Quarante minutes debout ou assis par terre, au choix."
+  },
+  {
+    "id": "club-inclassables",
+    "date": "2026-10-23",
+    "heure": "20h00",
+    "titre": "Club du cinquième rayon — les livres qu'on ne sait pas ranger",
+    "type": "Club de lecture",
+    "places": 20,
+    "restantes": 11,
+    "resume": "Chaque participant apporte un livre impossible à classer et défend son cas. Personne n'a jamais réussi à se mettre d'accord."
+  },
+  {
+    "id": "vasseur-quai",
+    "date": "2026-11-06",
+    "heure": "18h30",
+    "titre": "Colin Vasseur — Les Métiers du quai",
+    "type": "Rencontre",
+    "places": 40,
+    "restantes": 29,
+    "resume": "Quatre ans d'archives portuaires. La rencontre se tient devant la table du fond, au milieu du dossier du trimestre."
+  }
+]

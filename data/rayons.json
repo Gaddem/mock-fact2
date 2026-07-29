@@ -1,0 +1,58 @@
+[
+  {
+    "lettre": "A",
+    "nom": "Ailleurs",
+    "ancre": "ailleurs",
+    "sous_titre": "Récits de voyage, géographies lentes",
+    "description": "Des livres qui marchent. On y range aussi bien les traversées à pied que les enquêtes sur un fleuve ou une frontière. Rien qui promette du dépaysement : plutôt de l'attention."
+  },
+  {
+    "lettre": "E",
+    "nom": "Enfance",
+    "ancre": "enfance",
+    "sous_titre": "Albums, premiers romans, contes",
+    "description": "Le seul rayon où les livres sont posés à hauteur de genou. On y entre en s'asseyant par terre, et personne n'a jamais été prié de se relever."
+  },
+  {
+    "lettre": "H",
+    "nom": "Histoire",
+    "ancre": "histoire",
+    "sous_titre": "Sources, biographies, contre-récits",
+    "description": "Classé par période, pas par nation. La table du fond accueille chaque trimestre un dossier : cette saison, les métiers disparus des ports fluviaux."
+  },
+  {
+    "lettre": "I",
+    "nom": "Inclassables",
+    "ancre": "inclassables",
+    "sous_titre": "Le cinquième rayon",
+    "description": "Celui qui a donné son nom à la maison. Ce qui ne rentre nulle part finit ici : carnets d'atelier, essais d'une seule page, livres d'un seul lecteur. C'est notre rayon préféré, et le seul qu'on ne range jamais complètement."
+  },
+  {
+    "lettre": "L",
+    "nom": "Littérature",
+    "ancre": "litterature",
+    "sous_titre": "Romans, nouvelles, correspondances",
+    "description": "Le plus grand, forcément. Les traductions y côtoient les textes français sans séparation : un livre n'a pas de passeport."
+  },
+  {
+    "lettre": "P",
+    "nom": "Poésie",
+    "ancre": "poesie",
+    "sous_titre": "Recueils, revues, tirages courts",
+    "description": "Deux étagères, et la moitié de nos commandes à l'unité. On tient les revues, y compris celles qui ne paraissent qu'une fois tous les deux ans."
+  },
+  {
+    "lettre": "S",
+    "nom": "Sciences humaines",
+    "ancre": "sciences-humaines",
+    "sous_titre": "Enquêtes, anthropologie, critique",
+    "description": "Des livres qui demandent un crayon. On prête volontiers le crayon."
+  },
+  {
+    "lettre": "T",
+    "nom": "Théâtre",
+    "ancre": "theatre",
+    "sous_titre": "Textes, mises en scène, revues",
+    "description": "Petit rayon, gros passage : la compagnie du quartier répète à trois rues d'ici et vient s'y approvisionner en fin de semaine."
+  }
+]
