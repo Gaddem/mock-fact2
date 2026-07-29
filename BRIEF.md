@@ -140,9 +140,19 @@ tenir AA. Le token est donc densifié **sur cette zone seulement** (`.sur-fond`,
 budget de contraste se libère d'un coup. Partout ailleurs le token global ne bouge pas, le
 texte y est posé sur du papier nu.
 
-Résultat contre-intuitif : la photo est passée de délavée à franchement présente (plancher 219
-→ 140, opacité 0,42 → 0,8) **et** le pire pixel est monté de 4,52:1 à **6,48:1**. Le mauvais
-bouton, c'était l'image ; le bon, c'était la couleur du texte.
+**Le plancher se pose par `lighten`, pas par compression de plage.** La différence est tout :
+comprimer la dynamique écrase l'image entière et la rend informe — la photo n'était plus
+reconnaissable. Un `lighten` contre un gris plat ne touche **que** les pixels sous le seuil et
+laisse tous les autres sortir au pixel près.
+
+Cette photo échappe aussi au duplex vert des cinq autres : le geste qui fait tenir une bande de
+respiration efface une image qu'on doit reconnaître. Simple désaturation légère — le sépia du
+papier tombe déjà dans la palette. Elle s'affiche à opacité 1.
+
+Le plancher est posé un cran au-dessus de la valeur visée (182 pour un rendu à ~190) : la
+compression JPEG dépasse sous le seuil autour des contours, et c'est ce dépassement, pas la
+consigne, que mesure le contrôle. Résultat : photo pleinement lisible **et** pire pixel à
+**5,68:1**, contre 4,52:1 au départ quand elle était invisible.
 
 ## Pages
 
@@ -206,7 +216,7 @@ texte.
 | Matrice 320/375/414/768/834/1024/1280/1536 × 5 pages  | zéro défilement horizontal, zéro débordement, zéro rognage                       |
 | Cibles tactiles                                       | toutes ≥ 44 px de haut                                                           |
 | Contrastes (couleurs calculées)                       | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**               |
-| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; **6,48:1** au pire sur le hero (6,25:1 à 375 px), **4,74:1** ailleurs  |
+| Contrastes (pixels rendus, grain et photo de fond)    | tous AA ; **5,68:1** au pire sur le hero (5,73:1 à 375 px), **4,74:1** ailleurs  |
 | Entrées en scène                                      | 35 blocs sur l'accueil, 20 sur l'article : tous visibles en fin de défilement    |
 | `prefers-reduced-motion`                              | `data-pile` non posé, aucun `translate`/`rotate`, les 35 blocs visibles d'emblée |
 | Lighthouse mobile (build de production servi en gzip) | perf **91–94** · accessibilité **100** · bonnes pratiques **100** · SEO **54**   |

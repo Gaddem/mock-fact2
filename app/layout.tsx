@@ -22,7 +22,7 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL('https://gaddem.github.io/mock-fact2/'),
   title: {
-    default: 'Le Cinquième Rayon — Librairie indépendante à Nantes',
+    default: 'Le Cinquième Rayon — Librairie indépendante à Montpellier',
     template: '%s · Le Cinquième Rayon',
   },
   description:
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'fr_FR',
     siteName: 'Le Cinquième Rayon',
-    title: 'Le Cinquième Rayon — Librairie indépendante à Nantes',
+    title: 'Le Cinquième Rayon — Librairie indépendante à Montpellier',
     description:
       'Huit rayons, et un cinquième pour ce qui ne rentre nulle part. Sélections lues, rencontres, ateliers.',
     images: [{ url: '/images/og.png', width: 1200, height: 630, alt: 'Le Cinquième Rayon' }],

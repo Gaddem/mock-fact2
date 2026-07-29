@@ -11,7 +11,7 @@ export function PiedDePage() {
             <p className="mt-2 text-sm text-muted">
               9 rue du Puits-Doré
               <br />
-              44000 Nantes
+              34000 Montpellier
             </p>
           </Reveal>
 

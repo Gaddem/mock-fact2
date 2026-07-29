@@ -54,7 +54,7 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
     Huit rayons, et un pour le reste.
   </text>
   <text x="592" y="490" font-family="Georgia, serif" font-size="22" fill="#6B6559">
-    Nantes &#183; depuis 1998
+    Montpellier &#183; depuis 1998
   </text>
 </svg>`
 

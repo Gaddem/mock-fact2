@@ -28,7 +28,7 @@ export function EnTete() {
           <span className="font-titre text-lg font-semibold tracking-tight sm:text-xl">
             Le Cinquième Rayon
           </span>
-          <span className="surtitre mt-1 hidden sm:block">Librairie · Nantes</span>
+          <span className="surtitre mt-1 hidden sm:block">Librairie · Montpellier</span>
         </Lien>
 
         <nav aria-label="Navigation principale" className="hidden md:block">

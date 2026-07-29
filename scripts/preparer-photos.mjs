@@ -40,24 +40,33 @@ const PHOTOS = [
     page: 'https://unsplash.com/photos/52c61a468e7d',
     largeur: 1920,
     hauteur: 1100,
-    qualite: 62,
+    qualite: 74,
     usage: 'accueil — fond de l’ouverture',
     /**
      * Seule photo du site qui passe derrière du texte, donc seule à porter
      * ce traitement — réglé ici, dans le fichier, et pas au cas par cas
      * dans les pages : une page finirait par l'oublier.
      *
-     * Le flou est cuit dans le JPEG. En `filter: blur()` CSS, une image de
-     * 1920 px se re-rastérise à chaque frame dès que quoi que ce soit bouge
-     * au-dessus. Cuit, il rend aussi l'image très compressible.
+     * Elle échappe au duplex vert des autres : le geste qui fait tenir une
+     * bande de respiration efface une photo qu'on doit reconnaître. Ici,
+     * simple désaturation légère — le sépia du papier tombe déjà dans la
+     * palette.
      *
-     * `linear` remonte le plancher sans toucher au plafond : ce qui compte
-     * ici n'est pas le pixel le plus clair mais le plus SOMBRE, puisque tout
-     * le texte posé dessus est de l'encre sur du papier. Le plancher (219)
-     * est la seule valeur contrainte par le contraste ; élargir vers le haut
-     * rend la texture visible et ne coûte rien.
+     * Le plancher est posé par un `lighten` sur un gris plat, pas par une
+     * compression de plage. La différence est tout : une compression écrase
+     * l'image entière et la rend informe, un `lighten` ne touche QUE les
+     * pixels sous le seuil et laisse les autres intacts. Tout ce qui est
+     * au-dessus du plancher sort du script au pixel près. Le plancher est
+     * posé un cran au-dessus de la valeur visée : la compression JPEG
+     * dépasse sous le seuil autour des contours, et c'est ce dépassement,
+     * pas la consigne, que mesure le contrôle de contraste.
+     *
+     * Le flou est cuit dans le JPEG : en `filter: blur()` CSS, une image de
+     * 1920 px se re-rastérise à chaque frame dès que quoi que ce soit bouge
+     * au-dessus. Il reste léger — juste assez pour qu'aucun mot des livres
+     * photographiés ne se déchiffre.
      */
-    fond: { flou: 6, plage: [0.45, 140], opacite: 0.8 },
+    fond: { flou: 2.5, saturation: 0.85, voile: 0.1, plancher: 182, opacite: 1 },
   },
   {
     nom: 'pages-ouvertes',
@@ -136,41 +145,62 @@ for (const photo of PHOTOS) {
   const image = sharp(octets)
   if (photo.recadrage) image.extract(photo.recadrage)
 
-  // Traitement cuit dans le JPEG, pas posé en `filter` CSS : un filtre sur
-  // une image de 1800 px la re-rastérise à chaque frame dès qu'elle bouge.
-  //
-  // Le duplex demande DEUX passes : dans une seule, `greyscale` s'applique
-  // après `tint` (l'ordre est interne, pas celui des appels) et efface la
-  // teinte — on obtient un gris parfaitement neutre.
-  const etape = image
-    .resize(photo.largeur, photo.hauteur, { fit: 'cover', position: 'attention' })
-    .modulate({ brightness: photo.brillance ?? 1 })
-
-  if (photo.fond) etape.blur(photo.fond.flou)
-
-  const gris = await etape.greyscale().toColourspace('srgb').png().toBuffer()
-
-  // Voile de papier : les photos doivent sembler imprimées sur la même
-  // feuille que le texte, pas collées par-dessus.
-  const couchePapier = await sharp({
-    create: {
-      width: photo.largeur,
-      height: photo.hauteur,
-      channels: 4,
-      background: { ...hexVersRgb(PAPIER), alpha: 0.16 },
-    },
-  })
-    .png()
-    .toBuffer()
+  const couche = async (couleur, alpha) =>
+    sharp({
+      create: {
+        width: photo.largeur,
+        height: photo.hauteur,
+        channels: 4,
+        background: { ...couleur, alpha },
+      },
+    })
+      .png()
+      .toBuffer()
 
   const fichier = chemin(`../public/images/${photo.nom}.jpg`)
 
-  const finale = sharp(gris)
-    .tint(TEINTE)
-    .composite([{ input: couchePapier, blend: 'over' }])
-  if (photo.fond) finale.linear(photo.fond.plage[0], photo.fond.plage[1])
+  if (photo.fond) {
+    // La photo de fond garde ses couleurs : c'est une image qu'on doit
+    // reconnaître, pas une respiration entre deux blocs.
+    const base = await image
+      .resize(photo.largeur, photo.hauteur, { fit: 'cover', position: 'attention' })
+      .modulate({ saturation: photo.fond.saturation })
+      .blur(photo.fond.flou)
+      .composite([{ input: await couche(hexVersRgb(PAPIER), photo.fond.voile), blend: 'over' }])
+      .toBuffer()
 
-  await finale.jpeg({ quality: photo.qualite, progressive: true, mozjpeg: true }).toFile(fichier)
+    // `lighten` contre un gris plat : chaque canal prend le maximum des deux.
+    // Les pixels au-dessus du plancher ressortent inchangés, seuls les fonds
+    // les plus sombres sont relevés — c'est la garantie de contraste, sans
+    // toucher au reste de l'image.
+    const p = photo.fond.plancher
+    await sharp(base)
+      .composite([{ input: await couche({ r: p, g: p, b: p }, 1), blend: 'lighten' }])
+      .jpeg({ quality: photo.qualite, progressive: true, mozjpeg: true })
+      .toFile(fichier)
+  } else {
+    // Traitement cuit dans le JPEG, pas posé en `filter` CSS : un filtre sur
+    // une image de 1800 px la re-rastérise à chaque frame dès qu'elle bouge.
+    //
+    // Le duplex demande DEUX passes : dans une seule, `greyscale` s'applique
+    // après `tint` (l'ordre est interne, pas celui des appels) et efface la
+    // teinte — on obtient un gris parfaitement neutre.
+    const gris = await image
+      .resize(photo.largeur, photo.hauteur, { fit: 'cover', position: 'attention' })
+      .modulate({ brightness: photo.brillance ?? 1 })
+      .greyscale()
+      .toColourspace('srgb')
+      .png()
+      .toBuffer()
+
+    // Voile de papier : les photos doivent sembler imprimées sur la même
+    // feuille que le texte, pas collées par-dessus.
+    await sharp(gris)
+      .tint(TEINTE)
+      .composite([{ input: await couche(hexVersRgb(PAPIER), 0.16), blend: 'over' }])
+      .jpeg({ quality: photo.qualite, progressive: true, mozjpeg: true })
+      .toFile(fichier)
+  }
 
   // Contrôle de la teinte : trois moyennes de canaux identiques voudraient
   // dire que la passe de couleur a été effacée.
