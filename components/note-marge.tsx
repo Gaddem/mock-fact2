@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, type ReactNode } from 'react'
-import { mouvementReduit } from '@/lib/scroll'
+import { mouvementReduit, revelerEnVue } from '@/lib/scroll'
 
 /**
  * Note de marge, alignée sur son paragraphe à partir de 1280 px, dans le
@@ -25,22 +25,11 @@ export function NoteMarge({ children }: { children: ReactNode }) {
     }
 
     const filet = window.setTimeout(montrer, 2000)
-
-    const observateur = new IntersectionObserver(
-      ([entree]) => {
-        if (entree.isIntersecting) {
-          montrer()
-          observateur.disconnect()
-        }
-      },
-      { rootMargin: '0px 0px -15% 0px' },
-    )
-
-    observateur.observe(element)
+    const nettoyer = revelerEnVue(element, montrer)
 
     return () => {
       window.clearTimeout(filet)
-      observateur.disconnect()
+      nettoyer()
     }
   }, [])
 

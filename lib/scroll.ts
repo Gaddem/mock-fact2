@@ -81,6 +81,39 @@ export function abonnerEnVue(cible: Element, abonne: Abonne, marge = '30%') {
 }
 
 /**
+ * Un seul IntersectionObserver pour toutes les entrées en scène.
+ *
+ * Le site en compte plus de soixante : autant d'observateurs séparés, c'est
+ * autant de callbacks à faire tourner au même moment sur le fil principal.
+ * Un observateur partagé, une entrée par élément, et on se désabonne dès
+ * que l'élément est passé — il ne repasse jamais à l'invisible.
+ */
+const rappels = new WeakMap<Element, () => void>()
+let observateurEntree: IntersectionObserver | null = null
+
+export function revelerEnVue(element: Element, quand: () => void) {
+  observateurEntree ??= new IntersectionObserver(
+    (entrees) => {
+      for (const entree of entrees) {
+        if (!entree.isIntersecting) continue
+        rappels.get(entree.target)?.()
+        rappels.delete(entree.target)
+        observateurEntree?.unobserve(entree.target)
+      }
+    },
+    { rootMargin: '0px 0px -8% 0px' },
+  )
+
+  rappels.set(element, quand)
+  observateurEntree.observe(element)
+
+  return () => {
+    rappels.delete(element)
+    observateurEntree?.unobserve(element)
+  }
+}
+
+/**
  * Montée d'un élément dans le viewport, de 0 à 1.
  *
  * Les deux repères sont des fractions de la hauteur d'écran : 0 quand le

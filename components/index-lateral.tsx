@@ -57,11 +57,12 @@ export function IndexLateral({ entrees, titre }: { entrees: EntreeIndex[]; titre
           bleeds imbriqués élargissaient la colonne de grille au-delà du
           viewport — invisible, parce que `overflow-x: hidden` le rognait. */}
       <ul className="flex gap-1 overflow-x-auto lg:block lg:overflow-visible">
-        {entrees.map((entree) => (
+        {entrees.map((entree, rang) => (
           <li
             key={entree.ancre}
             className="index-item relative shrink-0 lg:pl-4"
             data-actif={entree.ancre === actif}
+            style={{ '--i': rang } as React.CSSProperties}
           >
             <span className="signet hidden lg:block" aria-hidden="true" />
             <a

@@ -127,12 +127,34 @@
     color: var(--texte);
   }
 
+  /* Le filet de l'exergue se tire de haut en bas quand le bloc arrive.
+     `scale` sur un élément dédié plutôt qu'une bordure animée : une
+     bordure qui grandit relance la mise en page à chaque frame. */
   .exergue {
+    position: relative;
     font-size: 1.3em;
     line-height: 1.4;
     font-style: italic;
     color: var(--accent);
-    border-left: 2px solid var(--accent-2);
+  }
+
+  .exergue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background-color: var(--accent-2);
+    transform-origin: top;
+    scale: 1 0;
+    transition: scale 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
+  }
+
+  /* Les deux cas : l'exergue est dans un bloc révélé, ou c'est lui le bloc. */
+  [data-visible='true'] .exergue::before,
+  .exergue[data-visible='true']::before {
+    scale: 1 1;
   }
 
   /* Lien de lecture : le soulignement est celui du texte, pas une bordure
@@ -159,21 +181,41 @@
      Primitives d'apparition (libres, non caractérisantes)
      ------------------------------------------------------------- */
 
+  /* Entrée en scène : la feuille se pose. Un seul geste, décliné —
+     montée simple pour le texte courant, feuillet légèrement de travers
+     pour ce qui a l'épaisseur d'un objet, entrée par la marge pour ce qui
+     vit dans la marge. Rien d'autre que translate / rotate / scale /
+     opacity : tout reste sur la couche de composition. */
   .reveal {
     opacity: 0;
-    translate: 0 18px;
+    translate: 0 26px;
     transition:
-      opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
-      translate 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+      opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+      translate 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+      rotate 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+      scale 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .reveal[data-sens='feuillet'] {
+    translate: 0 34px;
+    rotate: -0.8deg;
+    scale: 0.985;
+    transform-origin: 15% 0;
+  }
+
+  .reveal[data-sens='marge'] {
+    translate: -20px 0;
   }
 
   .reveal[data-visible='true'] {
     opacity: 1;
     translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
   }
 
   .reveal[data-stagger] {
-    transition-delay: calc(var(--i, 0) * 80ms);
+    transition-delay: calc(var(--i, 0) * 85ms);
   }
 
   /* -------------------------------------------------------------
@@ -349,6 +391,22 @@
      Index alphabétique des rayons — lettre active + signet
      ------------------------------------------------------------- */
 
+  /* L'index se déroule à l'arrivée sur la page, une entrée après l'autre.
+     `backwards` : avant son délai, l'entrée emprunte l'état de départ ;
+     après, elle revient au repos. Si l'animation ne joue pas, l'index est
+     simplement là, entier. */
+  @keyframes index-entree {
+    from {
+      opacity: 0;
+      translate: -12px 0;
+    }
+  }
+
+  .index-item {
+    animation: index-entree 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) calc(var(--i, 0) * 50ms)
+      backwards;
+  }
+
   .index-lettre {
     font-family: var(--police-titre), system-ui, sans-serif;
     font-weight: 600;
@@ -414,15 +472,19 @@
   .lettrine-marque {
     display: inline-block;
     opacity: 0;
-    translate: 0 -0.18em;
+    translate: 0 -0.34em;
+    rotate: -3deg;
+    transform-origin: 20% 90%;
     transition:
-      opacity 0.6s ease 0.15s,
-      translate 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+      opacity 0.55s ease 0.2s,
+      translate 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s,
+      rotate 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
   }
 
   [data-visible='true'] .lettrine-marque {
     opacity: 1;
     translate: 0 0;
+    rotate: 0deg;
   }
 
   /* -------------------------------------------------------------
@@ -479,27 +541,45 @@
     border-color: var(--accent);
   }
 
-  /* Tranche : des feuillets vus par le côté. `scale` plutôt que
-     `width` — une largeur animée relance la mise en page à chaque frame. */
+  /* Tranche : des feuillets vus par le côté. `scale` plutôt que `width` —
+     une largeur animée relance la mise en page à chaque frame.
+     Deux axes pilotés séparément : la hauteur se remplit à l'arrivée de la
+     fiche, l'épaisseur se prend au survol. Sans variables, le second
+     écraserait le premier. */
   .tranche {
+    --tranche-x: 1;
+    --tranche-y: 1;
     position: absolute;
     top: -1px;
     bottom: -1px;
     left: -1px;
     width: 9px;
-    transform-origin: left;
+    transform-origin: left top;
+    scale: var(--tranche-x) var(--tranche-y);
     background-image: repeating-linear-gradient(
       to right,
       var(--bordure) 0 1px,
       transparent 1px 3px
     );
     background-color: color-mix(in srgb, var(--accent) 8%, transparent);
-    transition: scale 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: scale 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Sous un Reveal, la tranche part de zéro et se remplit. Hors Reveal
+     (sans JS), elle reste pleine : l'état de repos est l'état visible. */
+  .reveal .tranche {
+    --tranche-y: 0;
+  }
+
+  .reveal[data-visible='true'] .tranche {
+    --tranche-y: 1;
+    transition-delay: 0.15s;
   }
 
   .fiche:hover .tranche,
   .fiche:focus-within .tranche {
-    scale: 1.9 1;
+    --tranche-x: 1.9;
+    transition-delay: 0s;
   }
 
   /* -------------------------------------------------------------
@@ -573,7 +653,18 @@
   }
 
   .tranche {
+    --tranche-x: 1 !important;
+    --tranche-y: 1 !important;
     transition: none !important;
+  }
+
+  .exergue::before {
+    scale: 1 1 !important;
+    transition: none !important;
+  }
+
+  .index-item {
+    animation: none !important;
   }
 
   *,

@@ -1,20 +1,21 @@
 import { Lien } from '@/components/lien'
+import { Reveal } from '@/components/reveal'
 
 export function PiedDePage() {
   return (
     <footer className="mt-24 border-t border-bordure">
       <div className="mx-auto max-w-[var(--contenu-max)] px-5 py-12 sm:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
+          <Reveal cascade rang={0}>
             <p className="font-titre text-lg font-semibold">Le Cinquième Rayon</p>
             <p className="mt-2 text-sm text-muted">
               9 rue du Puits-Doré
               <br />
               44000 Nantes
             </p>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal cascade rang={1}>
             <p className="surtitre">Horaires</p>
             <p className="mt-2 text-sm text-muted">
               Mardi au samedi, 10h – 19h
@@ -23,9 +24,9 @@ export function PiedDePage() {
               <br />
               Fermé le lundi
             </p>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal cascade rang={2}>
             <p className="surtitre">La maison</p>
             <ul className="mt-2 space-y-1 text-sm">
               <li>
@@ -44,15 +45,15 @@ export function PiedDePage() {
                 </Lien>
               </li>
             </ul>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal cascade rang={3}>
             <p className="surtitre">Commandes</p>
             <p className="mt-2 text-sm text-muted">
               Toute commande arrive sous 48 heures ouvrées. Les tirages courts et les revues
               demandent parfois une semaine de plus.
             </p>
-          </div>
+          </Reveal>
         </div>
 
         <p className="mt-12 border-t border-bordure pt-6 text-xs text-muted">

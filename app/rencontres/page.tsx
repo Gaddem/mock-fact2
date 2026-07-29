@@ -20,32 +20,42 @@ export default function Rencontres() {
   return (
     <>
       <section className="mx-auto max-w-[var(--contenu-max)] px-5 pt-14 sm:px-8 sm:pt-20">
-        <p className="surtitre">Rencontres et ateliers</p>
-        <h1 className="mt-5 max-w-[18ch] text-4xl font-semibold text-balance sm:text-6xl">
-          On lit d&apos;abord, on parle ensuite
-        </h1>
-        <p className="chapo colonne mt-8">
-          Toutes les trois semaines, entre deux rayons. Quarante places assises, autant de debout,
-          et jamais de micro : au-delà, on n&apos;entend plus celui qui lit.
-        </p>
+        <Reveal cascade rang={0}>
+          <p className="surtitre">Rencontres et ateliers</p>
+        </Reveal>
+        <Reveal cascade rang={1}>
+          <h1 className="mt-5 max-w-[18ch] text-4xl font-semibold text-balance sm:text-6xl">
+            On lit d&apos;abord, on parle ensuite
+          </h1>
+        </Reveal>
+        <Reveal cascade rang={2}>
+          <p className="chapo colonne mt-8">
+            Toutes les trois semaines, entre deux rayons. Quarante places assises, autant de debout,
+            et jamais de micro : au-delà, on n&apos;entend plus celui qui lit.
+          </p>
+        </Reveal>
       </section>
 
-      <Photo
-        source={coinLecture}
-        alt=""
-        sizes="100vw"
-        variante="fondu"
-        priorite
-        className="mx-auto mt-12 h-[200px] max-w-[1600px] sm:h-[280px] lg:h-[340px]"
-      />
+      <Reveal sens="feuillet" cascade rang={3}>
+        <Photo
+          source={coinLecture}
+          alt=""
+          sizes="100vw"
+          variante="fondu"
+          priorite
+          className="mx-auto mt-12 h-[200px] max-w-[1600px] sm:h-[280px] lg:h-[340px]"
+        />
+      </Reveal>
 
       <section className="mx-auto max-w-[var(--contenu-max)] px-5 py-[var(--section-y)] sm:px-8">
-        <h2 className="text-2xl font-semibold sm:text-3xl">Les prochaines dates</h2>
+        <Reveal>
+          <h2 className="text-2xl font-semibold sm:text-3xl">Les prochaines dates</h2>
+        </Reveal>
 
         <ul className="mt-10">
           {rencontres.map((rencontre, rang) => (
             <li key={rencontre.id}>
-              <Reveal cascade rang={rang}>
+              <Reveal sens="feuillet" cascade rang={rang}>
                 <article className="grid gap-4 border-t border-bordure py-8 lg:grid-cols-[10rem_minmax(0,1fr)_11rem] lg:gap-10">
                   <div>
                     <p className="font-titre text-lg font-medium">{formatDate(rencontre.date)}</p>
@@ -80,7 +90,7 @@ export default function Rencontres() {
       <section className="border-t border-bordure">
         <div className="mx-auto max-w-[var(--contenu-max)] px-5 py-[var(--section-y)] sm:px-8">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-16">
-            <div>
+            <Reveal sens="marge">
               <p className="surtitre">Comment ça se passe</p>
               <div className="colonne mt-5 space-y-4 text-muted">
                 <p>
@@ -97,9 +107,11 @@ export default function Rencontres() {
                   propre livre abîmé — sans ça, il n&apos;y a rien à réparer.
                 </p>
               </div>
-            </div>
+            </Reveal>
 
-            <FormulaireInscription />
+            <Reveal sens="feuillet" cascade rang={1}>
+              <FormulaireInscription />
+            </Reveal>
           </div>
         </div>
       </section>

@@ -22,25 +22,33 @@ export default function Catalogue() {
   return (
     <>
       <section className="mx-auto max-w-[var(--contenu-max)] px-5 pt-14 sm:px-8 sm:pt-20">
-        <p className="surtitre">Le catalogue</p>
-        <h1 className="mt-5 max-w-[18ch] text-4xl font-semibold text-balance sm:text-6xl">
-          Huit rayons, rangés par lettre
-        </h1>
-        <p className="chapo colonne mt-8">
-          Ce n&apos;est pas un stock : c&apos;est ce qu&apos;on tient toute l&apos;année, quoi
-          qu&apos;il arrive. Le reste se commande, arrive sous deux jours, et repart souvent le jour
-          même.
-        </p>
+        <Reveal cascade rang={0}>
+          <p className="surtitre">Le catalogue</p>
+        </Reveal>
+        <Reveal cascade rang={1}>
+          <h1 className="mt-5 max-w-[18ch] text-4xl font-semibold text-balance sm:text-6xl">
+            Huit rayons, rangés par lettre
+          </h1>
+        </Reveal>
+        <Reveal cascade rang={2}>
+          <p className="chapo colonne mt-8">
+            Ce n&apos;est pas un stock : c&apos;est ce qu&apos;on tient toute l&apos;année, quoi
+            qu&apos;il arrive. Le reste se commande, arrive sous deux jours, et repart souvent le
+            jour même.
+          </p>
+        </Reveal>
       </section>
 
-      <Photo
-        source={livreOuvert}
-        alt=""
-        sizes="100vw"
-        variante="fondu"
-        priorite
-        className="mx-auto mt-12 h-[180px] max-w-[1600px] sm:h-[240px] lg:h-[300px]"
-      />
+      <Reveal sens="feuillet" cascade rang={3}>
+        <Photo
+          source={livreOuvert}
+          alt=""
+          sizes="100vw"
+          variante="fondu"
+          priorite
+          className="mx-auto mt-12 h-[180px] max-w-[1600px] sm:h-[240px] lg:h-[300px]"
+        />
+      </Reveal>
 
       <div className="mx-auto max-w-[var(--contenu-max)] px-5 pb-[var(--section-y)] sm:px-8">
         <div className="grid gap-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-14">
@@ -58,22 +66,26 @@ export default function Catalogue() {
                 id={rayon.ancre}
                 className="scroll-mt-32 border-b border-bordure py-12 last:border-0 lg:py-16"
               >
-                <div className="flex items-baseline gap-4">
-                  <span className="index-lettre font-titre text-3xl sm:text-4xl">
-                    {rayon.lettre}
-                  </span>
-                  <div>
-                    <h2 className="text-2xl font-semibold sm:text-3xl">{rayon.nom}</h2>
-                    <p className="surtitre mt-1">{rayon.sous_titre}</p>
+                <Reveal>
+                  <div className="flex items-baseline gap-4">
+                    <span className="index-lettre font-titre text-3xl sm:text-4xl">
+                      {rayon.lettre}
+                    </span>
+                    <div>
+                      <h2 className="text-2xl font-semibold sm:text-3xl">{rayon.nom}</h2>
+                      <p className="surtitre mt-1">{rayon.sous_titre}</p>
+                    </div>
                   </div>
-                </div>
+                </Reveal>
 
-                <p className="colonne mt-5 text-muted">{rayon.description}</p>
+                <Reveal cascade rang={1}>
+                  <p className="colonne mt-5 text-muted">{rayon.description}</p>
+                </Reveal>
 
                 <ul className="mt-8 grid gap-5 sm:grid-cols-2">
                   {livresDuRayon(rayon.ancre).map((livre, rang) => (
                     <li key={livre.id}>
-                      <Reveal cascade rang={rang} className="h-full">
+                      <Reveal sens="feuillet" cascade rang={rang} className="h-full">
                         <FicheLivre livre={livre} />
                       </Reveal>
                     </li>

@@ -92,9 +92,16 @@ posé sur une table, puis **se déploient en éventail** puis en grille à mesur
   `data-pile="actif"` et empile. Sans JS, sans observateur, ou en `prefers-reduced-motion` :
   la grille est là, complète, lisible. On perd l'effet, jamais le contenu.
 
-### Effets secondaires (même vocabulaire : l'objet livre et la page imprimée)
+### Effets secondaires (même vocabulaire : le feuillet qui se pose)
 
-Tous nouveaux, aucun dans `deja_utilises` :
+Tous nouveaux, aucun dans `deja_utilises`. Un seul geste décliné à trois échelles — montée
+simple pour le texte courant, feuillet légèrement de travers (`rotate` + `scale`) pour ce qui a
+l'épaisseur d'un objet, entrée par la marge pour ce qui vit dans la marge :
+
+- `feuillet-pose` — la déclinaison ci-dessus, sur les fiches, les couvertures de rayon, les
+  photos et les rangées de l'agenda.
+- `filet-exergue` — le filet de la citation se tire de haut en bas à l'arrivée du bloc.
+- `index-deroule` — l'index alphabétique se déroule entrée par entrée à l'arrivée sur la page.
 
 - `index-lettre-active` — la lettre de l'index latéral correspondant à la section lue s'encre en vert.
 - `lettrine-posee` — la lettrine des articles s'aligne sur la grille de ligne de base à l'entrée.
@@ -171,16 +178,17 @@ objet ici.
 
 ## Vérifications — résultats
 
-| Contrôle                                                     | Résultat                                                                        |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| `npx tsc --noEmit`                                           | passe                                                                           |
-| `npm run lint`                                               | passe                                                                           |
-| `npm run build`                                              | `out/` généré, 5 pages                                                          |
-| Matrice 320/375/414/768/834/1024/1280/1536 × 5 pages         | zéro défilement horizontal, zéro débordement, zéro rognage                      |
-| Cibles tactiles                                              | toutes ≥ 44 px de haut                                                          |
-| Contrastes                                                   | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**              |
-| `prefers-reduced-motion`                                     | `data-pile` non posé, aucun `translate`/`rotate`, reveals à `opacity: 1`        |
-| Lighthouse mobile (build de production servi en gzip)        | perf **91–94** · accessibilité **100** · bonnes pratiques **100** · SEO **54**  |
+| Contrôle                                              | Résultat                                                                         |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `npx tsc --noEmit`                                    | passe                                                                            |
+| `npm run lint`                                        | passe                                                                            |
+| `npm run build`                                       | `out/` généré, 5 pages                                                           |
+| Matrice 320/375/414/768/834/1024/1280/1536 × 5 pages  | zéro défilement horizontal, zéro débordement, zéro rognage                       |
+| Cibles tactiles                                       | toutes ≥ 44 px de haut                                                           |
+| Contrastes                                            | 10 couples texte/fond réels, tous AA ; le plus faible à **5,22:1**               |
+| Entrées en scène                                      | 35 blocs sur l'accueil, 20 sur l'article : tous visibles en fin de défilement    |
+| `prefers-reduced-motion`                              | `data-pile` non posé, aucun `translate`/`rotate`, les 35 blocs visibles d'emblée |
+| Lighthouse mobile (build de production servi en gzip) | perf **91–94** · accessibilité **100** · bonnes pratiques **100** · SEO **54**   |
 
 **SEO 54, et c'est normal :** les deux audits qui échouent sont `is-crawlable` (le site est en
 `noindex`) et `robots-txt` — deux conséquences directes des règles du cadre. Le `robots.txt` d'un
