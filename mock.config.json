@@ -1,0 +1,14 @@
+{
+  "slug": "mock-fact2",
+  "marque": "Le Cinquieme Rayon",
+  "port": 4173,
+  "pages": [
+    "/",
+    "/catalogue/",
+    "/la-maison/",
+    "/rencontres/"
+  ],
+  "introuvable": "/inconnue/",
+  "colonneCollante": null,
+  "interditsSiMasque": []
+}
